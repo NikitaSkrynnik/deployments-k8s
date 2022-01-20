@@ -33,14 +33,10 @@ jobs:
           pattern="ghcr\.io\/networkservicemesh\/ci\/\(cmd-nsmgr\|cmd-forwarder-vpp\|cmd-nsc\):[a-z0-9]\{7\}"
 
           echo hello-10
-          grep -roh 'apps' -e ${pattern}
+          grep -roh 'apps' -e ${pattern} || exit 0;
 
-          echo hello-100
-          if [ $? -eq 0 ]; then
-            exit 1;
-          else
-            exit 0;
-          fi
+          echo hello-20
+          exit 1;
 
   create-release:
     needs: check-images
