@@ -29,13 +29,17 @@ jobs:
           git fetch origin
           git checkout origin/my-release/${{ steps.get-tag-step.outputs.tag }}
 
+          echo hello-1
           pattern="ghcr\.io\/networkservicemesh\/ci\/\(cmd-nsmgr\|cmd-forwarder-vpp\|cmd-nsc\):[a-z0-9]\{7\}"
-          images=$(grep -roh 'apps' -e ${pattern})
 
-          if ! [ -z "${images}" ]; then
-              echo ${images}
-              exit 1;
-          fi
+          echo hello-10
+          grep -roh 'apps' -e ${pattern}
+
+          echo hello-100
+          if [ $? -eq 0 ]; then
+            exit 1;
+          else
+            exit 0;
 
   create-release:
     needs: check-images
