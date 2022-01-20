@@ -13,10 +13,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Merge PR
-        uses: ridedott/merge-me-action@master
-        with:
-          GITHUB_LOGIN: "github-actions"
-          ENABLED_FOR_MANUAL_CHANGES: true
-          MERGE_METHOD: REBASE
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAXIMUM_RETRIES: 25
+        uses: "pascalgn/automerge-action@v0.14.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
