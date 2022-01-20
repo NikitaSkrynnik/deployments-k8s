@@ -6,13 +6,53 @@ on:
       - completed
     workflows:
       - "ci"
+    branches:
+      - "my-release/*"
 jobs:
   print-debug-info:
     name: Print debug info for Release workflow
     runs-on: ubuntu-latest
     steps:
       - uses: hmarr/debug-action@v2
+
+  check-images:
+    name: Check images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Get tag
+        run: |
+          branch=${{github.event.workflow_run.head_branch}}
+          echo '::set-output name=tag::'${branch#my-release/}
+        id: get-tag-step
+
+      - name: Check images
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          retry_on: error
+          retry_wait_seconds: 60
+          command: |
+            git fetch origin
+            git checkout origin/my-release/${{ steps.get-tag-step.outputs.tag }}
+
+            pattern="ghcr\.io\/networkservicemesh\/ci\/\(cmd-nsmgr\|cmd-forwarder-vpp\|cmd-nsc\):[a-z0-9]\{7\}"
+            images=$(grep -roh 'apps' -e ${pattern})
+
+            for image in ${images[@]}; do
+              echo $image
+              if ! [ -z ${image} ]; then
+                exit 1;
+              fi
+            done
+
+            exit 0;
+
   create-release:
+    needs: check-images
     name: Create release
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_branch, 'release/') }}
@@ -24,7 +64,7 @@ jobs:
       - name: Get tag
         run: |
           branch=${{github.event.workflow_run.head_branch}}
-          echo '::set-output name=tag::'${branch#release/}
+          echo '::set-output name=tag::'${branch#my-release/}
         id: get-tag-step
       - name: Push tag ${{ steps.get-tag-step.outputs.tag }}
         run: |
@@ -34,7 +74,7 @@ jobs:
       - name: Create release ${{ steps.get-tag-step.outputs.tag }}
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           tag_name: refs/tags/${{ steps.get-tag-step.outputs.tag }}
           release_name: ${{ steps.get-tag-step.outputs.tag }}
@@ -48,7 +88,7 @@ jobs:
     name: Update ${{ matrix.repository }}
     needs: create-release
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_branch, 'release/') }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_branch, 'l-----------release/') }}
     steps:
       - name: Get tag
         run: |
