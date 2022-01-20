@@ -17,5 +17,6 @@ jobs:
         with:
           GITHUB_LOGIN: "github-actions"
           ENABLED_FOR_MANUAL_CHANGES: true
+          MERGE_METHOD: MERGE
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAXIMUM_RETRIES: 25
