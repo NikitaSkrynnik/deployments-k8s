@@ -38,7 +38,7 @@ jobs:
     needs: check-images
     name: Create release
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_branch, 'release/') }}
+    if: ${{ contains(github.event.ref, 'release/') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
