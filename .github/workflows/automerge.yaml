@@ -39,7 +39,6 @@ jobs:
 
       - name: Print PR
         run: echo "Your PR is ${PR}"
-        if: steps.findPr.outputs.number
         env:
           PR: ${{ steps.findPr.outputs.pr }}
 
