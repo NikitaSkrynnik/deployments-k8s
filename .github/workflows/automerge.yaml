@@ -10,12 +10,31 @@ jobs:
   automerge:
     name: Automerge
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.actor == 'nsmbot' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+
+      - name: Print sha
+        run: |
+          echo ${{ github.sha }}
+
+      - name: Find merged PR
+        uses: jwalton/gh-find-current-pr@v1.0.2
+        id: findPr
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check PR
+        run: |
+          [[ -z $(echo ${{ steps.findPr.outputs.number }}) ]] && exit 1 || exit 0
+
       - name: Merge PR
         uses: ridedott/merge-me-action@master
+        if: success() && steps.findPr.outputs.number
         with:
-          GITHUB_LOGIN: nsmbot
+          GITHUB_LOGIN: github-actions
           ENABLED_FOR_MANUAL_CHANGES: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAXIMUM_RETRIES: 25
@@ -30,15 +49,7 @@ jobs:
         with:
           token: ${{ secrets.MY_TOKEN }}
 
-      - name: Find merged PR
-        uses: jwalton/gh-find-current-pr@v1.0.2
-        id: findPr
-        with:
-          sha: ${{ github.sha }}
-          github-token: ${{ secrets.MY_TOKEN }}
-
       - name: Delete release branch
-        if: steps.findPr.outputs.number
         run: |
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
