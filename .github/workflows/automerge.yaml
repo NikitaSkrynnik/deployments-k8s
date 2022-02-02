@@ -12,8 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Find merged PR
+        uses: jwalton/gh-find-current-pr@v1.0.2
+        id: findPr
+        with:
+          sha: ${{ github.sha }}
+          github-token: ${{ github.token }}
+
+      - name: Check PR
+        run: |
+          [[ -z $(echo ${{ steps.findPr.outputs.number }}) ]] && exit 1 || exit 0
+
       - name: Merge PR
         uses: ridedott/merge-me-action@master
+        if: success() && steps.findPr.outputs.number
         with:
           GITHUB_LOGIN: github-actions
           ENABLED_FOR_MANUAL_CHANGES: true
@@ -30,21 +42,7 @@ jobs:
         with:
           token: ${{ secrets.MY_TOKEN }}
 
-      - name: Find merged PR
-        uses: jwalton/gh-find-current-pr@v1.0.2
-        id: findPr
-        with:
-          sha: ${{ github.sha }}
-          github-token: ${{ secrets.MY_TOKEN }}
-
-      - name: Print PR
-        run: echo "Your PR is ${PR}"
-        if: steps.findPr.outputs.number
-        env:
-          PR: ${{ steps.findPr.outputs.pr }}
-
       - name: Delete release branch
-        if: ${{ steps.findPr.outputs.number }}
         run: |
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
