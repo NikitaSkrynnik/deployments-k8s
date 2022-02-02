@@ -27,14 +27,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
+          token: ${{ secrets.MY_TOKEN }}
 
       - name: Find merged PR
         uses: jwalton/gh-find-current-pr@v1.0.2
         id: findPr
         with:
           sha: ${{ github.sha }}
-          github-token: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
+          github-token: ${{ secrets.MY_TOKEN }}
 
       - name: Delete release branch
         if: steps.findPr.outputs.number
