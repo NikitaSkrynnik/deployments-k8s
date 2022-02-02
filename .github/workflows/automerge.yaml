@@ -7,19 +7,6 @@ on:
     workflows:
       - "ci"
 jobs:
-  automerge:
-    name: Automerge
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
-      - name: Merge PR
-        uses: ridedott/merge-me-action@master
-        with:
-          GITHUB_LOGIN: nsmbot
-          ENABLED_FOR_MANUAL_CHANGES: true
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
-          MAXIMUM_RETRIES: 25
-
   delete-release-branch:
     name: Delete Release Branch
     runs-on: ubuntu-latest
@@ -32,3 +19,15 @@ jobs:
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
           git push origin --delete ${{ github.event.workflow_run.head_branch }}
+  automerge:
+    name: Automerge
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Merge PR
+        uses: ridedott/merge-me-action@master
+        with:
+          GITHUB_LOGIN: nsmbot
+          ENABLED_FOR_MANUAL_CHANGES: true
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+          MAXIMUM_RETRIES: 25
