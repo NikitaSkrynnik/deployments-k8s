@@ -17,6 +17,43 @@ jobs:
         with:
           config_file: .yamllint.yml
           strict: true
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: shellcheck
+        uses: fkautz/shell-linter@v1.0.1
+  refcheck:
+    name: refcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: Convert to local and back and check refs
+        run: |
+          ./to-local.sh
+          ./to-ref.sh
+          git diff --name-only --exit-code
+  image-check:
+    name: Check that image is pullable
+    runs-on: ubuntu-latest
+    if: ${{  contains(github.head_ref, 'update/')  }}
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+      - name: Check images
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          retry_on: timeout
+          command: |
+            repoName=${GITHUB_REF#refs/heads/update/networkservicemesh/}
+            images=$(grep -roh 'apps' -e "ghcr.io/networkservicemesh/ci/${repoName}.*")
+            for image in $images; do
+              docker pull $image
+            done
   diff-correctness-check:
     name: diff-correctness-check
     runs-on: ubuntu-latest
@@ -32,3 +69,16 @@ jobs:
           BRANCH_POINT=$(git merge-base ${{github.event.pull_request.base.sha}} HEAD)
           echo "branch point: $BRANCH_POINT"
           find . -type f -not -path "./.github/*" ! -name '*.yaml' ! -name '*.yml' -exec git diff "${{ github.event.pull_request.head.sha }}".."$BRANCH_POINT" --exit-code -- {} +
+
+  linkChecker:
+    runs-on: ubuntu-latest
+    container:
+      image: lycheeverse/lychee:20211216183321587853
+      env:
+        GITHUB_TOKEN: $LYCHEE_GITHUB_TOKEN
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Check external links using lychee
+        run: |
+          lychee -v '**/*.md' --exclude-mail --exclude '.*?ref=.*'
