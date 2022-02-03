@@ -12,20 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Find merged PR
-        uses: jwalton/gh-find-current-pr@v1.0.2
-        id: findPr
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1.5.0
+        id: find-pull-request
         with:
-          sha: ${{ github.sha }}
-          github-token: ${{ github.token }}
+          branch: github.event.workflow_run.head_branch
+
+      - run: echo "Pull Request ${number} (${sha})"
+        env:
+          number: ${{ steps.find-pull-request.outputs.number }}
+          sha: ${{ steps.find-pull-request.outputs.head-sha }}
 
       - name: Check PR
         run: |
-          [[ -z $(echo ${{ steps.findPr.outputs.number }}) ]] && exit 1 || exit 0
+          [[ -z $(echo ${{ steps.find-pull-request.outputs.number }}) ]] && exit 1 || exit 0
 
       - name: Merge PR
         uses: ridedott/merge-me-action@master
-        if: success() && steps.findPr.outputs.number
+        if: success() && steps.find-pull-request.outputs.number
         with:
           GITHUB_LOGIN: github-actions
           ENABLED_FOR_MANUAL_CHANGES: true
