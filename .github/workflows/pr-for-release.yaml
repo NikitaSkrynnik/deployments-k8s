@@ -5,6 +5,7 @@ on:
     branches:
       - "release/**"
       - "!release/*"
+
 jobs:
   auto-pull-request:
     name: Pull Request on release/* Branch Push
