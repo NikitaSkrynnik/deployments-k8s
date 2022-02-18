@@ -10,6 +10,7 @@ escape() {
   echo "$1" | sed 's/\//\\\//g'
 }
 
+
 get_root() {
   root="$(echo "$1" | sed 's/[^/]*$//g')"
   root="$(echo "${root}" | sed 's/[^/]*\//..\//g')"
