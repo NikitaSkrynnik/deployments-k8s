@@ -20,8 +20,7 @@ thus saving cluster resources (see step 14).
 
 1. Create test namespace:
 ```bash
-NAMESPACE=($(kubectl create -f https://raw.githubusercontent.com/networkservicemesh/deployments-k8s/edd4bd1936a8869ae0e9580d308ef912e8c4da7b/examples/features/namespace.yaml)[0])
-NAMESPACE=${NAMESPACE:10}
+kubectl create ns ns-scale-from-zero
 ```
 
 2. Select nodes to deploy NSC and supplier:
@@ -97,7 +96,7 @@ cat > kustomization.yaml <<EOF
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: $NAMESPACE
+namespace: ns-scale-from-zero
 
 bases:
 - https://github.com/networkservicemesh/deployments-k8s/apps/nse-supplier-k8s?ref=edd4bd1936a8869ae0e9580d308ef912e8c4da7b
@@ -126,32 +125,32 @@ kubectl apply -k .
 
 8. Wait for applications ready:
 ```bash
-kubectl wait -n $NAMESPACE --for=condition=ready --timeout=1m pod -l app=nse-supplier-k8s
+kubectl wait -n ns-scale-from-zero --for=condition=ready --timeout=1m pod -l app=nse-supplier-k8s
 ```
 ```bash
-kubectl wait -n $NAMESPACE --for=condition=ready --timeout=1m pod -l app=nsc-kernel
+kubectl wait -n ns-scale-from-zero --for=condition=ready --timeout=1m pod -l app=nsc-kernel
 ```
 ```bash
-kubectl wait -n $NAMESPACE --for=condition=ready --timeout=1m pod -l app=nse-icmp-responder
+kubectl wait -n ns-scale-from-zero --for=condition=ready --timeout=1m pod -l app=nse-icmp-responder
 ```
 
 9. Find NSC and NSE pods by labels:
 ```bash
-NSC=$(kubectl get pod -n $NAMESPACE --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l app=nsc-kernel)
-NSE=$(kubectl get pod -n $NAMESPACE --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l app=nse-icmp-responder)
+NSC=$(kubectl get pod -n ns-scale-from-zero --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l app=nsc-kernel)
+NSE=$(kubectl get pod -n ns-scale-from-zero --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -l app=nse-icmp-responder)
 ```
 
 10. Check connectivity:
 ```bash
-kubectl exec $NSC -n $NAMESPACE -- ping -c 4 169.254.0.0
+kubectl exec $NSC -n ns-scale-from-zero -- ping -c 4 169.254.0.0
 ```
 ```bash
-kubectl exec $NSE -n $NAMESPACE -- ping -c 4 169.254.0.1
+kubectl exec $NSE -n ns-scale-from-zero -- ping -c 4 169.254.0.1
 ```
 
 11. Check that the NSE spawned on the same node as NSC:
 ```bash
-NSE_NODE=$(kubectl get pod -n $NAMESPACE --template '{{range .items}}{{.spec.nodeName}}{{"\n"}}{{end}}' -l app=nse-icmp-responder)
+NSE_NODE=$(kubectl get pod -n ns-scale-from-zero --template '{{range .items}}{{.spec.nodeName}}{{"\n"}}{{end}}' -l app=nse-icmp-responder)
 ```
 ```bash
 if [ $NSC_NODE == $NSE_NODE ]; then echo "OK"; else echo "different nodes"; false; fi
@@ -159,19 +158,19 @@ if [ $NSC_NODE == $NSE_NODE ]; then echo "OK"; else echo "different nodes"; fals
 
 12. Remove NSC:
 ```bash
-kubectl scale -n $NAMESPACE deployment nsc-kernel --replicas=0
+kubectl scale -n ns-scale-from-zero deployment nsc-kernel --replicas=0
 ```
 
 13. Wait for the NSE pod to be deleted:
 ```bash
-kubectl wait -n $NAMESPACE --for=delete --timeout=1m pod -l app=nse-icmp-responder
+kubectl wait -n ns-scale-from-zero --for=delete --timeout=1m pod -l app=nse-icmp-responder
 ```
 
 ## Cleanup
 
 Delete namespace:
 ```bash
-kubectl delete ns ${NAMESPACE}
+kubectl delete ns ns-scale-from-zero
 ```
 Delete network service:
 ```bash
