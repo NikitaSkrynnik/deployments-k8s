@@ -113,14 +113,10 @@ configMapGenerator:
 EOF
 ```
 
-6. Register network service:
-```bash
-kubectl apply -f https://raw.githubusercontent.com/networkservicemesh/deployments-k8s/edd4bd1936a8869ae0e9580d308ef912e8c4da7b/examples/features/scale-from-zero/autoscale-netsvc.yaml
-```
 
 7. Deploy NSC and supplier:
 ```bash
-kubectl apply -k .
+kubectl apply -k https://github.com/NikitaSkrynnik/deployments-k8s/examples/features/scale-from-zero?ref=ee592c1fd24cbaad9e6f32a8268762efd8109f07
 ```
 
 8. Wait for applications ready:
