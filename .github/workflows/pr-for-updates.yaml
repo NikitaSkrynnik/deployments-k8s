@@ -17,7 +17,7 @@ jobs:
           echo "PULL_REQUEST_BODY<<EOF" >> $GITHUB_ENV
           echo "$PULL_REQUEST_BODY" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          branch=${${{ github.ref }}#refs/head/}
+          branch=${${{ github.ref }}#"refs/head/"}
 
           echo $branch
 
