@@ -17,7 +17,7 @@ jobs:
           echo "PULL_REQUEST_BODY<<EOF" >> $GITHUB_ENV
           echo "$PULL_REQUEST_BODY" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          branch=${${{ github.ref }}#"refs/head/"}
+          branch='${${{ github.ref }}#"refs/head/"}'
 
           echo $branch
 
@@ -26,6 +26,6 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /rate_limit
 
-          gh pr create -B 'main' -H '$branch' --title 'New pr' --body 'This is a new pull request'
+          gh pr create -B 'main' -H $branch --title 'New pr' --body 'This is a new pull request'
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
