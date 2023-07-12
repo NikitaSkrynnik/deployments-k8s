@@ -17,6 +17,7 @@ jobs:
           echo "PULL_REQUEST_BODY<<EOF" >> $GITHUB_ENV
           echo "$PULL_REQUEST_BODY" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+          echo ${{ github.ref }}
       # - name: pull-request-action
       #   uses: vsoch/pull-request-action@add/retry
       #   env:
