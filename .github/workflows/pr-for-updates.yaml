@@ -19,7 +19,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           branch=${${{ github.ref }}#refs/head/}
 
-          echo &branch
+          echo $branch
 
           gh pr create -B main -H $branch --title 'New pr' --body 'This is a new pull request'
         env:
