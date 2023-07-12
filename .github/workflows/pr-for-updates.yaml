@@ -28,4 +28,4 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         env:
           token: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          branch: ${${{ github.ref }}#"refs/heads"}
