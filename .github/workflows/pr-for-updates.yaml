@@ -17,14 +17,6 @@ jobs:
           echo "PULL_REQUEST_BODY<<EOF" >> $GITHUB_ENV
           echo "$PULL_REQUEST_BODY" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          branch=${${{ github.ref }}#"refs/head/"}
-
-          echo $branch
-
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /rate_limit
 
           gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body 'This is a new pull request'
         env:
