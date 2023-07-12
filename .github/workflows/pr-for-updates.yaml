@@ -18,6 +18,6 @@ jobs:
           echo "$PULL_REQUEST_BODY" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-          gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body 'This is a new pull request'
+          while gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body 'This is a new pull request'; [[ $? != 0 ]]; do sleep 1m; done
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
