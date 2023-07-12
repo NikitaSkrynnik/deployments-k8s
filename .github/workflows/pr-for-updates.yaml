@@ -21,6 +21,6 @@ jobs:
 
           echo &branch
 
-          gh pr create -B main -H $branch --title "New pr" --body "This is a new pull request"
+          gh pr create -B main -H $branch --title 'New pr' --body 'This is a new pull request'
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
