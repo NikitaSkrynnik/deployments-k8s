@@ -21,6 +21,11 @@ jobs:
 
           echo $branch
 
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /rate_limit
+
           gh pr create -B main -H 'update/NikitaSkrynnik/cmd-nsmgr' --title 'New pr' --body 'This is a new pull request'
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
