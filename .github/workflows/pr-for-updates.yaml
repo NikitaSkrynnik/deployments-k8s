@@ -12,24 +12,24 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create a Pull Request
         run: |
-          branch=${${{ github.ref }}#"refs/heads/"}
           ref=${{ github.ref }}
           branch=${ref#"refs/heads/"}
-          echo "Ref $ref"
-          echo "Branch $branch"
-          prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
+
           prTitle="Update from $branch"
+          prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
 
           timeout_sec=300
           t0=$(date '+%s')
           remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
           while [[ ${remaining} -gt 0 ]]
           do
-              gh pr create -B 'main' -H ${{ github.ref }} --title "$prTitle" --body "$prBody"
-              echo $?
+              echo "Starting command..."
+              gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody"
+              echo "Command has finished. Result: $?"
               if [[ $? -eq 0 ]]; then
                 break
               fi
+              echo "Command has failed. Retry"
               remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
           done
         env:
