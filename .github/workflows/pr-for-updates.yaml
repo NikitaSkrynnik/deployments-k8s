@@ -14,9 +14,9 @@ jobs:
         run: |
           pullRequestBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
 
-          local timeout_sec=300
-          local t0=$(date '+%s')
-          local remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
+          timeout_sec=300
+          t0=$(date '+%s')
+          remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
           while [[ ${remaining} -gt 0 ]]
           do
               gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body $pullRequestBody
