@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create a Pull Request
         run: |
-          pullRequestBody =$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
+          pullRequestBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
 
           local timeout_sec=300
           local t0=$(date '+%s')
