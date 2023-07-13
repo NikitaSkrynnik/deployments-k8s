@@ -10,14 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Construct PR message
+      - name: Create a Pull Request
         run: |
-          PULL_REQUEST_BODY=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
-          echo "$PULL_REQUEST_BODY"
-          echo "PULL_REQUEST_BODY<<EOF" >> $GITHUB_ENV
-          echo "$PULL_REQUEST_BODY" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          pullRequestBody =$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
 
-          while gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body 'This is a new pull request'; [[ $? != 0 ]]; do sleep 1m; done
+          local timeout_sec=300
+          local t0=$(date '+%s')
+          local remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
+          while [[ ${remaining} -gt 0 ]]
+          do
+              gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body $pullRequestBody
+              if [ $? -eq 0 ]; then
+                return 0
+              fi
+              remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
