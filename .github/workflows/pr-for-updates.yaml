@@ -24,7 +24,7 @@ jobs:
           do
               gh pr create -B 'main' -H ${{ github.ref }} --title 'New pr' --body "$prBody"
               if [ $? -eq 0 ]; then
-                return 0
+                break
               fi
               remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
           done
