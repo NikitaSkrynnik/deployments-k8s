@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create a Pull Request
         run: |
-          branch=${${{ github.ref }}#"refs/head/"}
+          branch=${${{ github.ref }}#"refs/heads/"}
           echo "Ref ${{ github.ref }}"
           echo "Branch $branch"
           prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
