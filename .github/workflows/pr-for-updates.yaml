@@ -13,6 +13,8 @@ jobs:
       - name: Create a Pull Request
         run: |
           branch=${${{ github.ref }}#"refs/head/"}
+          echo "Ref ${{ github.ref }}"
+          echo "Branch $branch"
           prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
           prTitle="Update from $branch"
 
