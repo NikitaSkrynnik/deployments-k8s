@@ -24,7 +24,7 @@ jobs:
           while [[ ${remaining} -gt 0 ]]
           do
               echo "Starting command..."
-              gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody"
+              gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody" || true
               echo "Command has finished. Result: $?"
               if [[ $? -eq 0 ]]; then
                 break
