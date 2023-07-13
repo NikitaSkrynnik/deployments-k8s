@@ -26,6 +26,8 @@ jobs:
               echo "Starting command..."
               if gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody" ; then
                 break
+              else
+                sleep 30
               fi
               echo "Command has failed. Retry"
               remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
