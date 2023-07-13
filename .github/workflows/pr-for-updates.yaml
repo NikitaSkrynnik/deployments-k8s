@@ -13,9 +13,6 @@ jobs:
       - name: Create a Pull Request
         run: |
           prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
-          prBody="$prBody"
-
-          echo $prBody
 
           timeout_sec=300
           t0=$(date '+%s')
