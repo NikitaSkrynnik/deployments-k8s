@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
       - name: Create a Pull Request
         run: |
-          branches=$(git branch -r --list "origin/update/*")
+          branches=$(git branch -r --list "update/*")
           echo $branches
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
