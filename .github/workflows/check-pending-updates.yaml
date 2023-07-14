@@ -1,5 +1,5 @@
 ---
-name: Pull Request on update/* Branch Push
+name: Pull Request for pending update/* branches
 on:
   schedule:
     - cron: '*/10 * * * *'
