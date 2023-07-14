@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create a Pull Request
         run: |
-          branches1=$(git branch)
-          echo $branches1
+          branches=$(git branch -r --list "origin/update/*")
+          echo $branches
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
