@@ -2,7 +2,7 @@
 name: Pull Request for pending update/* branches
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/20 * * * *'
 jobs:
   auto-pull-request:
     name: Pull Request on update/* Branch Push
