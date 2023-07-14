@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - update/**
+
+concurrency: my-group
+
 jobs:
   auto-pull-request:
     name: Pull Request on update/* Branch Push
@@ -18,21 +21,6 @@ jobs:
           prTitle="Update from $branch"
           prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
 
-          timeout_sec=3000
-          t0=$(date '+%s')
-          remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
-          while [[ ${remaining} -gt 0 ]]
-          do
-              echo "Starting command..."
-              if gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody" ; then
-                exit 0
-              else
-                sleep 30
-              fi
-              echo "Command has failed. Retry"
-              remaining=$(expr ${timeout_sec} + ${t0} - "$(date '+%s')")
-          done
-
-          exit 1
+          gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody"
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
