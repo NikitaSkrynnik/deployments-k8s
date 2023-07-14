@@ -1,0 +1,28 @@
+---
+# This is a basic workflow to help you get started with Actions
+ 
+name:
+  First Cron Job
+ 
+  # Controls when the workflow will run
+on:
+  # Triggers the workflow every 5 minutes
+  schedule:
+    - cron: "*/2 * * * *"
+ 
+      # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "cron"
+  auto-pull-request:
+    name: Pull Request on update/* Branch Push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create a Pull Request
+        run: |
+          branches=$(git branch -r --list "origin/update/*")
+          echo $branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
