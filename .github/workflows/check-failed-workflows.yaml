@@ -3,6 +3,9 @@ name: Check failed auto-pull-request workflows
 on:
   schedule:
     - cron: '*/10 * * * *'
+  push:
+    branches:
+      - "main"
 jobs:
   check-failed-workflows:
     strategy:
