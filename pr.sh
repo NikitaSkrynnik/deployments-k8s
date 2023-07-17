@@ -36,9 +36,12 @@
 
 
 
-repos=$(gh api \
-  -H "Accept: application/vnd.github+json" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
-  /orgs/networkservicemesh/repos?type=sources | jq '.[].full_name' | grep "networkservicemesh/cmd-*.")
+repos=$(gh repo list networkservicemesh --limit 100 --no-archived --source --json "name" --jq '.[].name' | grep ".*cmd-.*")
 
 echo $repos > js.json
+
+
+for repo in $repos
+do
+  echo $repo
+done
