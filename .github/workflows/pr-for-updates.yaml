@@ -10,11 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Create a Pull Request
         run: |
-          branches=$(git branch -r --list "update/*")
-          echo $branches
+          ref=${{ github.ref }}
+          branch=${ref#"refs/heads/"}
+
+          prTitle="Update from $branch"
+          prBody=$(git log --pretty='format:%B' -1 | sed '/^$/d;$d' | sed 's/#/# /g')
+          
+          gh pr create -B "main" -H "$ref" --title "$prTitle" --body "$prBody"
         env:
           GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
