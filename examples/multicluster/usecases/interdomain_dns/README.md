@@ -13,14 +13,14 @@ Make sure that you have completed steps from [multicluster](../../)
 
 Deploy NSE:
 ```bash
-kubectl --kubeconfig=$KUBECONFIG2 apply -k https://github.com/networkservicemesh/deployments-k8s/examples/multicluster/usecases/interdomain_dns/cluster2?ref=c53eff44565f1a5d225855ebabd845e92133df24
+kubectl --kubeconfig=$KUBECONFIG2 apply -k ../../../../../../../../../../home/nikita/repos/NSM/deployments-k8s/examples/multicluster/usecases/interdomain_dns/cluster2
 ```
 
 **2. Deploy client on cluster1**
 
 Deploy client:
 ```bash
-kubectl --kubeconfig=$KUBECONFIG1 apply -k https://github.com/networkservicemesh/deployments-k8s/examples/multicluster/usecases/interdomain_dns/cluster1?ref=c53eff44565f1a5d225855ebabd845e92133df24
+kubectl --kubeconfig=$KUBECONFIG1 apply -k ../../../../../../../../../../home/nikita/repos/NSM/deployments-k8s/examples/multicluster/usecases/interdomain_dns/cluster1
 ```
 
 Wait for applications ready:
