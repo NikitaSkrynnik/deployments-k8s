@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
+          token: ${{ secrets.MY_TOKEN }}
       - name: Update references
         run: |
           sed -r -i '/github.com\/networkservicemesh\/deployments-k8s/ s/(\?ref=[a-z0-9.]*)/\?ref='"$GITHUB_SHA"'/g' `grep '?ref=' -rl *`
