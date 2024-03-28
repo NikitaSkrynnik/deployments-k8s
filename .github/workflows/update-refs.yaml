@@ -20,18 +20,27 @@ jobs:
         with:
           ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure GPG keys
+        run: |
+          echo -e "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PRIVATE_KEY_ID: ${{ secrets.GPG_ID }}
+
       - name: Update references
         run: |
           sed -r -i '/github.com\/networkservicemesh\/deployments-k8s/ s/(\?ref=[a-z0-9.]*)/\?ref='"$GITHUB_SHA"'/g' `grep '?ref=' -rl *`
           sed -r -i '/raw.githubusercontent.com\/networkservicemesh\/deployments-k8s/ s/(deployments-k8s\/[a-z0-9.]*)/deployments-k8s\/'"$GITHUB_SHA"'/g' `grep 'raw.githubusercontent.com' -rl *`
-          
+        
           export GPG_TTY=$(tty)
-          echo -e "$GPG_PRIVATE_KEY" | gpg --batch --passphrase "nikita" --import
           git config --global user.signingkey $GPG_PRIVATE_KEY_ID
           git config --global commit.gpgsign true
-
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
+
+          git config -l
+          
           git add -- .
           git commit -s -m "Update references"
           git push
