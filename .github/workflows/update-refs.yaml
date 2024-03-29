@@ -39,10 +39,8 @@ jobs:
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
 
-          git config -l
-          
           git add -- .
-          git commit -s -m "Update references"
+          git commit -m "Update references"
           git push
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
