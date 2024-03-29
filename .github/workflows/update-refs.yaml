@@ -17,9 +17,6 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
-        with:
-          ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -38,5 +35,5 @@ jobs:
           git config --global user.name "Nikita"
 
           git add -- .
-          git commit -m -S "Update references"
+          git commit -m -s "Update references"
           git push
