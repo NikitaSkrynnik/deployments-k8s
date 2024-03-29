@@ -40,7 +40,7 @@ jobs:
           git config --global user.name "NSMBot"
 
           git add -- .
-          git commit -m "Update references"
+          git commit -m -s "Update references"
           git push
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
