@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure GPG keys
         run: |
-          echo -e "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --import
+          echo -e "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --passphrase nikita --import
           gpg -K
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
