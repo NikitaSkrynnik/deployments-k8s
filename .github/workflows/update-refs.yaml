@@ -19,37 +19,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Configure GPG keys
-        run: |
-          echo -e "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --import
-          gpg -K
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PRIVATE_KEY_ID: ${{ secrets.GPG_ID }}
 
-      - name: Add the custom gpg siging program that passes the passphrase to the gpg CLI
-        run: |
-          rm -rf /tmp/gpg.sh
-          echo '#!/bin/bash' >> /tmp/gpg.sh
-          echo 'gpg --batch --pinentry-mode=loopback --passphrase "nikita" $@' >> /tmp/gpg.sh
-          chmod +x /tmp/gpg.sh
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: "nikita"
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       - name: Update references
         run: |
           sed -r -i '/github.com\/networkservicemesh\/deployments-k8s/ s/(\?ref=[a-z0-9.]*)/\?ref='"$GITHUB_SHA"'/g' `grep '?ref=' -rl *`
           sed -r -i '/raw.githubusercontent.com\/networkservicemesh\/deployments-k8s/ s/(deployments-k8s\/[a-z0-9.]*)/deployments-k8s\/'"$GITHUB_SHA"'/g' `grep 'raw.githubusercontent.com' -rl *`
         
-          export GPG_TTY=`tty`
-          git config --global user.signingkey $GPG_PRIVATE_KEY_ID
-          git config --global commit.gpgsign true
-          git config gpg.program gpg2
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
 
           git add -- .
-          git commit -m "Update references"
+          git commit -m -S "Update references"
           git push
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PRIVATE_KEY_ID: ${{ secrets.GPG_ID }}
