@@ -22,11 +22,18 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure GPG keys
         run: |
-          echo -e "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --yes --passphrase-fd 0 --import
+          echo -e "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --import
           gpg -K
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PRIVATE_KEY_ID: ${{ secrets.GPG_ID }}
+
+      - name: Add the custom gpg siging program that passes the passphrase to the gpg CLI
+        run: |
+          rm -rf /tmp/gpg.sh
+          echo '#!/bin/bash' >> /tmp/gpg.sh
+          echo 'gpg --batch --pinentry-mode=loopback --passphrase "nikita" $@' >> /tmp/gpg.sh
+          chmod +x /tmp/gpg.sh
 
       - name: Update references
         run: |
@@ -36,6 +43,7 @@ jobs:
           export GPG_TTY=`tty`
           git config --global user.signingkey $GPG_PRIVATE_KEY_ID
           git config --global commit.gpgsign true
+          git config gpg.program /tmp/gpg.sh
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "NSMBot"
 
