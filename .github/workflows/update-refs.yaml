@@ -29,7 +29,9 @@ jobs:
           git config --global user.email "nikita.skrynnik@xored.com"
           git config --global user.name "Nikita"
 
-          echo "push"
+          echo "add"
           git add -- .
+          echo "commit"
           git commit -m -s "Update references"
+          echo "push"
           git push
