@@ -25,9 +25,11 @@ jobs:
           sed -r -i '/github.com\/networkservicemesh\/deployments-k8s/ s/(\?ref=[a-z0-9.]*)/\?ref='"$GITHUB_SHA"'/g' `grep '?ref=' -rl *`
           sed -r -i '/raw.githubusercontent.com\/networkservicemesh\/deployments-k8s/ s/(deployments-k8s\/[a-z0-9.]*)/deployments-k8s\/'"$GITHUB_SHA"'/g' `grep 'raw.githubusercontent.com' -rl *`
         
+          echo "config"
           git config --global user.email "nikita.skrynnik@xored.com"
           git config --global user.name "Nikita"
 
+          echo "push"
           git add -- .
           git commit -m -s "Update references"
           git push
