@@ -3,12 +3,7 @@ name: Update references
 on:
   push:
     branches:
-      - main
-  workflow_run:
-    types:
-      - completed
-    workflows:
-      - 'automerge'
+      - "main"
 jobs:
   update-refs:
     name: Update references
