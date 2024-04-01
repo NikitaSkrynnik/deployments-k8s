@@ -32,6 +32,6 @@ jobs:
           echo "add"
           git add -- .
           echo "commit"
-          git commit -m -s "Update references"
+          git commit -m "Update references"
           echo "push"
           git push
