@@ -29,5 +29,6 @@ jobs:
           git config --global user.name "Nikita"
 
           git add -- .
+
           git commit -m "Update references"
           git push
