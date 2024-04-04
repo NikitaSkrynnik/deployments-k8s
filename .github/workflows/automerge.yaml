@@ -16,7 +16,7 @@ jobs:
   automerge:
     name: Automerge
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.actor == 'nsmbot' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     outputs:
       pr-number: ${{ steps.find-pull-request.outputs.number }}
     steps:
@@ -30,9 +30,9 @@ jobs:
         uses: ridedott/merge-me-action@master
         if: steps.find-pull-request.outputs.number
         with:
-          GITHUB_LOGIN: nsmbot
+          GITHUB_LOGIN: NikitaSkrynnik
           ENABLED_FOR_MANUAL_CHANGES: true
-          GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TEST_TOKEN }}
           MAXIMUM_RETRIES: 25
 
   delete-release-branch:

@@ -28,6 +28,6 @@ jobs:
       - name: pull-request-action
         uses: vsoch/pull-request-action@1.1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_PREFIX: "release/"
           PULL_REQUEST_BRANCH: "release/${{ steps.get-tag-step.outputs.tag }}"
