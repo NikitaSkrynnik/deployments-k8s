@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.NSM_BOT_GITHUB_TOKEN }}
+          token: ${{ secrets.TEST_TOKEN }}
 
       - name: Delete release branch
         run: |
