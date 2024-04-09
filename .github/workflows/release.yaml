@@ -1,9 +1,11 @@
 ---
 name: Release
 on:
-  push:
-    branches:
-      - "release/*"
+  workflow_run:
+    types:
+      - completed
+    workflows:
+      - 'ci'
 jobs:
   print-debug-info:
     name: Print debug info for Release workflow
