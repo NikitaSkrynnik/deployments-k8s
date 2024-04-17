@@ -1,0 +1,13 @@
+---
+name: ci
+on:
+  push:
+    branches:
+      - 'main'
+      - 'release/**'
+  pull_request:
+jobs:
+  yamllint:
+    uses: networkservicemesh/.github/.github/workflows/yamllint.yaml@main
+    with:
+      config_file: "./.yamllint.yml"
