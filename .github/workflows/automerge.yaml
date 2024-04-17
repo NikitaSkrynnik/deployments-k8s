@@ -24,6 +24,9 @@ jobs:
     if: ${{ needs.check-mergeability.outputs.pr_branch_ref != '' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
       - name: merge
         run: gh pr merge ${{ github.event.workflow_run.head_branch }} --squash --delete-branch
         env:
