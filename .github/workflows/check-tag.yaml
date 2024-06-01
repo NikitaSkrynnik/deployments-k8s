@@ -25,7 +25,7 @@ jobs:
 
     - name: Set envs
       run: |
-        echo ${{ nputs.logLevel.branch }}
+        echo ${{ inputs.branch }}
         echo "tag=$(echo ${{ github.event.ref }} | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
 
     - name: Check tags in images
