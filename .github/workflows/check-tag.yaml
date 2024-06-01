@@ -5,6 +5,11 @@ on:
     branches:
       - "release/*"
   workflow_dispatch:
+    inputs:
+      branch:
+        description: Release branch
+        required: true
+        type: string
 
 concurrency:
   group: check-tag
@@ -20,6 +25,7 @@ jobs:
 
     - name: Set envs
       run: |
+        echo ${{ nputs.logLevel.branch }}
         echo "tag=$(echo ${{ github.event.ref }} | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
 
     - name: Check tags in images
