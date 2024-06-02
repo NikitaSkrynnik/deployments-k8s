@@ -36,6 +36,7 @@ jobs:
       run: |
         images=$(grep -ro * -e "ghcr\.io\/networkservicemesh\/.*")
         for image in $images; do
+          echo "Image: $image"
           if [[ "$image" != *"${{ env.tag }}"* ]]; then
             exit 0
           fi
