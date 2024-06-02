@@ -69,7 +69,7 @@ jobs:
         grep 'ghcr\.io\/networkservicemesh\/ci\/.*' -rl * | xargs sed -i "/ghcr\.io\/networkservicemesh\/ci/ s#ci\/\(.*\):.*#\1:${{ env.tag }}#g"
   
         git add -- .
-        git commit -sm "Replace image versions"
+        git commit -sm "Update image versions"
 
     - name: Replace logging level with INFO
       run: |
@@ -86,9 +86,5 @@ jobs:
         grep 'raw.githubusercontent.com' -rl * | xargs sed -i "/raw.githubusercontent.com\/networkservicemesh\/deployments-k8s/ s/deployments-k8s\/[a-z0-9]*/deployments-k8s\/${{ env.tag }}/g"
         
         git add -- .
-        git commit -s -m "Update references to the latest tag"
-
-        echo "CHECKOUT"
-        git checkout release/${{ env.tag }}
-        echo "PUSH"
+        git commit -s -m "Update references"
         git push origin release/${{ env.tag }}
