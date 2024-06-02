@@ -83,5 +83,7 @@ jobs:
         git add -- .
         git commit -s -m "Update references to the latest tag"
 
-        ref=${{ github.event.ref }}
-        git push origin ${ref#refs/heads/}
+        echo "CHECKOUT"
+        git checkout release/${{ env.tag }}
+        echo "PUSH"
+        git push origin release/${{ env.tag }}
