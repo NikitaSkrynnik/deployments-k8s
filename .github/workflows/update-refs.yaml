@@ -16,10 +16,11 @@ jobs:
           fetch-depth: 0
       - name: Update references
         run: |
-          rm -f ./to-export.sh
           git config --global user.email "nsmbot@networkservicmesh.io"
           git config --global user.name "nsmbot"
           git checkout test
+          git reset --hard main
+          rm -f ./to-reft.sh
           git add -- .
-          git commit -s -m "remove to export"
+          git commit -s -m "remove to ref"
           git push origin test
