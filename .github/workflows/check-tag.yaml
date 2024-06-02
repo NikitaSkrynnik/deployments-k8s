@@ -48,20 +48,16 @@ jobs:
     steps:
     - name: Set envs
       run: |
-        branch=${{ inputs.branch }}
-        [[ -z "$branch" ]] && branch=${{ github.event.ref }}
-        echo $branch
+        branch=${{ inputs.branch }} && [[ -z "$branch" ]] && branch=${{ github.event.ref }}
         echo "tag=$(echo $branch | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Configure Git
-      run: |
         git config --global user.email "nsmbot@networkservicmesh.io"
         git config --global user.name "NSMBot"
 
-   
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: release/${{ env.tag }}
 
     - name: Replace image versions in apps folder
       run: |
