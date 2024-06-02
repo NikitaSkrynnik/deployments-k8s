@@ -23,9 +23,7 @@ jobs:
     - name: Set envs
       run: |
         branch=${{ inputs.branch }}
-        if [ -z "$branch" ]; then
-          branch=${{ github.event.ref }}
-        fi
+        [[ -z "$branch" ]] && branch=${{ github.event.ref }}
         echo $branch
         echo "tag=$(echo $branch | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
 
@@ -50,6 +48,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check-tags]
     steps:
+    - name: Set envs
+      run: |
+        branch=${{ inputs.branch }}
+        [[ -z "$branch" ]] && branch=${{ github.event.ref }}
+        echo $branch
+        echo "tag=$(echo $branch | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
+
     - name: Checkout repository
       uses: actions/checkout@v4
 
@@ -58,9 +63,7 @@ jobs:
         git config --global user.email "nsmbot@networkservicmesh.io"
         git config --global user.name "NSMBot"
 
-    - name: Set envs
-      run: |
-        echo "tag=$(echo ${{ github.event.ref }} | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
+   
 
     - name: Replace image versions in apps folder
       run: |
