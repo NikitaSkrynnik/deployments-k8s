@@ -20,9 +20,6 @@ jobs:
     name: Check tags
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Set envs
       run: |
         branch=${{ inputs.branch }}
@@ -31,6 +28,11 @@ jobs:
         fi
         echo $branch
         echo "tag=$(echo $branch | awk -F '/' '{print $NF}')" >> $GITHUB_ENV
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: release/${{ env.tag }}
 
     - name: Check tags in images
       run: |
