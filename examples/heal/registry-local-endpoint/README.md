@@ -12,7 +12,7 @@ Make sure that you have completed steps from [basic](../../basic) or [memory](..
 
 Deploy NSC and NSE:
 ```bash
-kubectl apply -k https://github.com/networkservicemesh/deployments-k8s/examples/heal/registry-local-endpoint/nse-first?ref=6a2cde6fc3d594ba83923887c37fe2aa46f9b135
+kubectl apply -k ../../../examples/heal/registry-local-endpoint/nse-first
 ```
 
 Wait for applications ready:
@@ -45,7 +45,7 @@ kubectl delete pod ${REGISTRY} -n nsm-system
 
 Restart NSE. This command recreates NSE with a new label:
 ```bash
-kubectl apply -k https://github.com/networkservicemesh/deployments-k8s/examples/heal/registry-local-endpoint/nse-second?ref=6a2cde6fc3d594ba83923887c37fe2aa46f9b135
+kubectl apply -k ../../../examples/heal/registry-local-endpoint/nse-second
 ```
 
 Waiting for new ones:
