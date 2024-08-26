@@ -9,7 +9,7 @@ NSC and NSE are using the `kernel` mechanism to connect to its local forwarder.
 
 Deploy NSC and NSE:
 ```bash
-kubectl apply -k https://github.com/networkservicemesh/deployments-k8s/examples/features/dual-stack/Kernel2Kernel_dual_stack?ref=2480cbb57f7dba2567d6aac8f9ce1d49e91fd5bb
+kubectl apply -k ../../../../examples/features/dual-stack/Kernel2Kernel_dual_stack
 ```
 
 Wait for applications ready:
